@@ -5,6 +5,7 @@ A collection of Python functions and classes
 
 import pandas as pd
 import numpy as np
+import math
 from typing import Tuple
 from sklearn.preprocessing import MinMaxScaler
 
@@ -74,3 +75,21 @@ def split_data(data_raw: np.ndarray, seq_len: int, train_split: float) -> Tuple[
     y_test = data[num_train:, -1, :]
 
     return X_train, y_train, X_test, y_test
+
+
+def cohens_d_calculate(dataset1: pd.Series, dataset2: pd.Series) -> np.float64:
+    """ 
+    Calculate Cohens d to measure the strength of 
+    the relationship between two variables in a dataset
+    :param: dataset1 - pandas series
+    :param: dataset2 - pandas series
+    :returns: 
+    """
+    dataset_len = len(dataset1), len(dataset2) 
+    var = np.var(dataset1, ddof=1), np.var(dataset2, ddof=1)
+    pooled_std_dev = math.sqrt(
+        ((dataset_len[0] - 1) * var[0] + (dataset_len[1] - 1) * var[1]) / 
+        (dataset_len[0] + dataset_len[1] - 2)
+    ) 
+    dataset_mean = np.mean(dataset1), np.mean(dataset2)
+    return abs(((dataset_mean[0] - dataset_mean[1]) / pooled_std_dev))

@@ -35,6 +35,26 @@ Attributes:
  - wifi - Has wifi or not. Range: 0-1, int64
  - price_range - This is the target variable with value of 0(low cost), 1(medium cost), 2(high cost) and 3(very high cost). Range: 0-3, int64
 
+Pairplot:
+ <p align="center">
+	<img src="./figures/1_EDA/pairplot.png">
+</p>
+
+Heatmap:
+ <p align="center">
+	<img src="./figures/1_EDA/heatmap.png">
+</p>
+
+Target variable price_range based on values of ram:
+ <p align="center">
+	<img src="./figures/1_EDA/ram_price_range.png">
+</p>
+
+Target variable price_range based on the count values of ram:
+ <p align="center">
+	<img src="./figures/1_EDA/ram_count_price_range.png">
+</p>
+
 ### 2. Data Preprocessing
 
 Based on [exploratory data analysis](./src/EDA.ipynb) test set does not have target variable price_range. We split our dataset into train-dev-test. We have train and test sets, but we split test set by half to dev-test sets. We will rougly have train-dev-test 67%-16.5%-16.5%.  

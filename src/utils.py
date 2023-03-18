@@ -8,6 +8,8 @@ import numpy as np
 import math
 from typing import Tuple
 from sklearn.preprocessing import MinMaxScaler
+import torch
+from torch.utils.data import DataLoader, random_split
 
 
 __author__ = "Erik Matovic"
@@ -15,6 +17,13 @@ __version__ = "1.0"
 __email__ = "xmatovice@stuba.sk"
 __status__ = "Development"
 
+
+def split_train_val(df: pd.DataFrame, split_scalar: float=0.1) -> Tuple[
+    torch.utils.data.dataset.Subset, torch.utils.data.dataset.Subset]:
+    """
+    """
+    return random_split(
+        df, [len(df) - int(split_scalar * len(df)), int(split_scalar * len(df))])
 
 def check_null_values(df: pd.DataFrame) -> None:
     """

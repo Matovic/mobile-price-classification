@@ -6,6 +6,7 @@ A collection of Python functions and classes
 import pandas as pd
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 from typing import Tuple
 from sklearn.preprocessing import MinMaxScaler
 import torch
@@ -21,9 +22,60 @@ __status__ = "Development"
 def split_train_val(df: pd.DataFrame, split_scalar: float=0.1) -> Tuple[
     torch.utils.data.dataset.Subset, torch.utils.data.dataset.Subset]:
     """
+    :param df: pandas dataframe
+    :param split_scalar: % split into train-validation
     """
     return random_split(
         df, [len(df) - int(split_scalar * len(df)), int(split_scalar * len(df))])
+
+
+def plot_accuracy(train_accuracy, validation_accuracy) -> None:
+    """
+    TODO: refactor
+    """
+    f = plt.figure(figsize=(10,6)) #plotting
+    f.set_size_inches(18.5, 10.5)
+    f.set_dpi(100)
+
+    accuracy_csv = pd.DataFrame({
+        "epochs": range(len(train_accuracy)), 
+        "train_accuracy": train_accuracy,
+        "validation_accuracy": validation_accuracy
+    })
+    # loss_csv.to_csv("../outputs/loss.csv")
+    # gca stands for 'get current axis'
+    ax = plt.gca()
+    accuracy_csv.plot(kind='line',x='epochs',y='train_accuracy', ax=ax)
+    accuracy_csv.plot(kind='line',x='epochs',y='validation_accuracy', color='red', ax=ax)
+    plt.title(f'Train loss vs Validation accuracy on {len(train_accuracy)} epochs')
+    plt.show()
+
+
+def plot_loss(train_loss, val_loss) -> None:
+    '''
+    Visualize training loss vs. validation loss.
+    Parameters
+    ----------
+    train_loss: training loss
+    val_loss: validation loss
+    Returns: None
+    -------
+    '''
+    f = plt.figure(figsize=(10,6)) #plotting
+    f.set_size_inches(18.5, 10.5)
+    f.set_dpi(100)
+
+    loss_csv = pd.DataFrame({"epochs": range(len(train_loss)), "train_loss": train_loss,
+                             "val_loss": val_loss})
+    # loss_csv.to_csv("../outputs/loss.csv")
+    # gca stands for 'get current axis'
+    ax = plt.gca()
+    loss_csv.plot(kind='line',x='epochs',y='train_loss',ax=ax )
+    loss_csv.plot(kind='line',x='epochs',y='val_loss', color='red', ax=ax)
+    plt.title(f'Train loss vs Validation loss on {len(train_loss)} epochs')
+    plt.show()
+    # plt.savefig("../outputs/train_vs_val_loss.png")
+
 
 def check_null_values(df: pd.DataFrame) -> None:
     """

@@ -66,4 +66,17 @@ print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 print(tf.config.list_physical_devices('GPU'))
 ```
 
+### 3. Model
+
+
+### 4. Training
+
+
+### 5. Validation
+
+### 6. Classification
+Classification on unknown data.
+
+## Conclusion
+We have implemented mutlilayer perceptron using PyTorch and tensorflow. Training was on the GPU using CUDA. 
 

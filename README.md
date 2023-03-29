@@ -2,7 +2,8 @@
 
 ## Authors
  - [Erik Matovič](https://github.com/Matovic)
- 
+ - Jakub Horvat 
+
 ## Usage
 
 [Install tensorflow to enable GPU](https://www.tensorflow.org/install/pip)   
@@ -66,7 +67,7 @@ Best parameters from WandB:
  - hidden size: 256,
  - epochs: 100,
  - learning rate: 0.03648030109469176
- 
+#### PyTorch
 ```python3
 class MLP(nn.Module):
     """ 
@@ -123,7 +124,35 @@ class MLP(nn.Module):
         return output
 ```
 
+#### TensorFlow
+```python3
+#Define Layers and Dropout of MLP
+hidden_size = 256
+model = keras.Sequential([
+    keras.layers.Dense(hidden_size,input_shape=(20,),activation='relu'),
+    keras.layers.Dropout(0.05),
+    keras.layers.Dense(hidden_size,activation='relu'),
+    keras.layers.Dropout(0.05),
+    keras.layers.Dense(hidden_size,activation='relu'),
+    keras.layers.Dropout(0.05),
+    keras.layers.Dense(hidden_size,activation='relu'),
+    keras.layers.Dropout(0.05),
+    keras.layers.Dense(4,activation='sigmoid') #activation='sigmoid'
+])
+
+#best learning rate
+lr = 0.03648030109469176
+#definition of optimizer
+optimizer = tf.keras.optimizers.Adam(learning_rate=lr)
+#configuration of model for training
+model.compile(optimizer=optimizer,
+              loss='categorical_crossentropy',
+              metrics=['accuracy','mse']
+              )
+```
+
 ### 4. Training & validation
+#### PyTorch
 ```python3
 def accuracy_fn(y_true, y_pred):
     correct = torch.eq(y_true, y_pred).sum().item() 
@@ -213,7 +242,24 @@ def train_mlp(n_epochs, mlp, optimizer, loss_fn,
 	<img src="./figures/validation_acc.png">
 </p>
 
+#### TensorFlow
+```python3
+#model training
+history = model.fit(x_train,
+                    y_cat_train,
+                    batch_size=128,
+                    epochs=100,
+                    validation_data=(x_val,y_cat_val),
+                    callbacks=[
+                      WandbMetricsLogger(log_freq=5),
+                      WandbModelCheckpoint("models")
+                    ],
+                    verbose=0)
+```
+
 ### 5. Testing
+
+#### PyTorch
 ```python3
 def evaluation(mlp, test_dl):
     y_pred_all, y_test_all = list(), list()
@@ -237,6 +283,25 @@ def evaluation(mlp, test_dl):
 
 <p align="center">
 	<img src="./figures/classification_report.png">
+</p>
+
+#### TensorFlow
+```python3
+predicted_test = []
+for row in predict:
+    a = max(row)
+    b=np.where(row==a)[0][0]
+    predicted_test.append(b)
+
+from sklearn.metrics import confusion_matrix,ConfusionMatrixDisplay,classification_report
+report = classification_report(y_test, predicted_test, target_names=['0', '1', '2', '3'], output_dict=True)
+f = plt.figure(figsize=(10,6)) #plotting
+f.set_size_inches(18.5, 10.5)
+f.set_dpi(100)
+print(report)
+```
+<p align="center">
+	<img src="./figures/classification_report_tensor.png">
 </p>
 
 ### 6. Classification

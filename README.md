@@ -69,15 +69,15 @@ Best parameters from WandB:
  - learning rate: 0.03648030109469176   
  
  #### Návrh architektúry 
+ Šírka architektúry z najlepších parametrov vychádza 256.   
+ 
  6 vrstiev:
- - Dense 1 
-   - 20 input features 
-   - 256 output (z najlepších parametrov)
+ - Dense 1 - 20 input features a 256 output
  - Dense 2 – 256 input a 256 output 
  - Dense 3 – 256 input a 256 output 
  - Dense 4 – 256 input a 256 output 
  - Dense 5 – 256 input a 256 output 
- - Dense 6 – 256 input a 4 output classes 
+ - Dense 6 – 256 input a 4 output classes   
 Používame Relu aktiváciu a dropout na úrovni 0.05 pravdepodobnosti na vynulovanie neurónov na vrstve. 
  
 #### PyTorch
@@ -362,8 +362,10 @@ We have these best parameters from WandB:
  - batch size: 512,
  - hidden size: 256,
  - epochs: 100,
- - learning rate: 0.03648030109469176 
+ - learning rate: 0.03648030109469176      
 
+
+Accuracy is over 80% and metrics show out model is satisfying.
 
 ## Changelog
 ### 22.03.2023 - spravené 
@@ -415,7 +417,7 @@ We have these best parameters from WandB:
  - Pre tensorflow nemusíme všetky experimenty  
  - Začať bez dropoutu a možnosť pridať neskôr 
 
-#### 28.03.2023 - spravené 
+### 28.03.2023 - spravené 
  - Rozbehanie WandB a vygenerovanie pdf report 
  - Experimentovanie s hyperparametrami prostredníctvom WandB 
    - Hidden size 

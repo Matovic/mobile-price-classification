@@ -78,6 +78,8 @@ Best parameters from WandB:
  - Dense 4 – 256 input a 256 output 
  - Dense 5 – 256 input a 256 output 
  - Dense 6 – 256 input a 4 output classes   
+
+
 Používame Relu aktiváciu a dropout na úrovni 0.05 pravdepodobnosti na vynulovanie neurónov na vrstve. 
  
 #### PyTorch

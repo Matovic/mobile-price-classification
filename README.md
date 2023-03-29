@@ -66,7 +66,20 @@ Best parameters from WandB:
  - batch size: 512,
  - hidden size: 256,
  - epochs: 100,
- - learning rate: 0.03648030109469176
+ - learning rate: 0.03648030109469176   
+ 
+ #### Návrh architektúry 
+ 6 vrstiev:
+ - Dense 1 
+   - 20 input features 
+   - 256 output (z najlepších parametrov)
+ - Dense 2 – 256 input a 256 output 
+ - Dense 3 – 256 input a 256 output 
+ - Dense 4 – 256 input a 256 output 
+ - Dense 5 – 256 input a 256 output 
+ - Dense 6 – 256 input a 4 output classes 
+Používame Relu aktiváciu a dropout na úrovni 0.05 pravdepodobnosti na vynulovanie neurónov na vrstve. 
+ 
 #### PyTorch
 ```python3
 class MLP(nn.Module):
@@ -152,6 +165,21 @@ model.compile(optimizer=optimizer,
 ```
 
 ### 4. Training & validation
+Tréning:
+ - Mini-batch na úrovni 512  
+ - LossCrossEntropyLoss pre klasifikátor - klasifikovať do 4 tried 
+ - Adam Optimizer 
+ - Na vlastnom PC s podporou CUDA, tréning na GPU (PyTorch špecificky presmerovanie tensors a modelu cez metódu to(device), kde device je GPU) 
+ - 100 epoch z najlepších parametrov z WandB
+ - learning rate: 0.03648030109469176 
+ - softmax pre získanie pravdepodobnosti, ktorá trieda je klasifikovaná, čo je neskôr použité pre výpočet accuracy, na čo máme samostatnú funkciu, kde porovnávame ekvivalenciu matíc
+
+
+Validácia: 
+ - Vizualizácia loss funkcie na trénovacom a validačnom datasete
+ - Vizualizácia accuracy – porovnanie skutočného targetu s predikciou 
+ - Testovací dataset priamo bol dostupný bez údaju o price_range, tak sme brali validáčné dána z train.csv 
+
 #### PyTorch
 ```python3
 def accuracy_fn(y_true, y_pred):
@@ -264,7 +292,12 @@ history = model.fit(x_train,
 ```
 
 ### 5. Testing
-
+Evaluácia 
+ - Classification report 
+ - Confusion matrix 
+ - testovacie dáta zobrané z train.csv nakoľko test.csv dáta nemajú target atribút(price_range), čiže by sme nevedeli skutočne klasifikované triedy, iba naše predikované
+ 
+ 
 #### PyTorch
 ```python3
 def evaluation(mlp, test_dl):
@@ -323,5 +356,80 @@ matrix_display.plot(cmap='Blues')
 </p>
 
 ## Conclusion
-We have implemented mutlilayer perceptron using PyTorch and tensorflow. Training was on the GPU using CUDA. 
+We have implemented mutlilayer perceptron using PyTorch and tensorflow. Training was on the GPU using CUDA.  
+
+We have these best parameters from WandB:
+ - batch size: 512,
+ - hidden size: 256,
+ - epochs: 100,
+ - learning rate: 0.03648030109469176 
+
+
+## Changelog
+### 22.03.2023 - spravené 
+#### Exploratory Data Analysis 
+ - Analýza atribútov 
+ - Žiadne NaN hodnoty ani chýbajúce hodnoty 
+ - Heatmapa koreláci 
+ - Štatistické overenie hypotézy - mobily s vačšou RAM patria do drahšej cenovej kategórie 
+ - Načítanie datasetu – pandas dataframe 
+ - Rozdelenie datasetu na trénovací, validačný a testovací 
+   - Trénovací(2000 vzoriek) a testovací(1000 vzoriek) dataset je dostupný 
+   - Testovací nemá target atribút - price range 
+   - Validačný sme vytvorili z testovacieho pre 200 vzoriek 
+
+#### Návrh architektúry 
+ - Dense 1 
+   - 20 input features a druhý pokus s 1 input feature(iba RAM), pretože z EDA vidieť vysokú koreláciu medzi kategorizáciou cenového rozsahu a RAM 
+   - 32 output 
+ - Dense 2 – 32 input a 32 output 
+ - Dense 3 – 32 input a 4 output classes 
+ - Relu 
+ - dropout 
+
+#### Tréning 
+ - Mini-batch 
+ - Loss  
+ - LossCrossEntropyLoss pre klasifikátor - skúsili sme klasifikovať do 4 tried 
+ - MSELoss pre regresiu - skúsili sme predikovať hodnoty 0-3 miesto klasifikácie do 4 tried nakoľko price_range je v trénovacom a validačnom datasete a preškálovaním do hodnôt 0-1 sme sa snažili predikovať tieto hodnoty, neoverilo sa, experiment sme zanechali 
+ - Optimizers 
+   - SGDMomentum 
+   - Adam – prerobene z SGDMomenta 
+ - Na vlastnom PC s podporou CUDA, tréning na GPU (PyTorch špecificky presmerovanie tensors a modelu cez metódu to(device), kde device je GPU) 
+ - 50 – 100 epoch 
+
+#### Validácia 
+ - Vizualizácia loss funkcie na trénovacom a validačnom datasete 
+ - Vizualizácia accuracy – porovnanie skutočného targetu s predikciou 
+ - Klasifikácia na testovacom datasete 
+ - Klasifikovanie na vzorke o veľkosti 1000 
+ - Testovací dataset priamo bol dostupný bez údaju o price_range 
+ - Všetko spravené na PyTorch, začatý proces na tensorflow 
+
+#### 22.03.2023 - TO DO 
+ - Experimentovanie s hyperparametrami 
+ - Zväčšiť počet epôch 
+ - WandB 
+ - Pridat hĺbku a šírku siete 
+ - Normalizovať dáta alebo spraviť hlbšiu sieť 
+ - Pre tensorflow nemusíme všetky experimenty  
+ - Začať bez dropoutu a možnosť pridať neskôr 
+
+#### 28.03.2023 - spravené 
+ - Rozbehanie WandB a vygenerovanie pdf report 
+ - Experimentovanie s hyperparametrami prostredníctvom WandB 
+   - Hidden size 
+   - Batch size 
+   - Počet epôch 
+   - Learning rate 
+ - Pridanie šírky 
+   - Z 32 až na 512 
+ - Pridanie hĺbky 
+   - Z 3 vrstiev na 6 
+ - Dropout na úrovni 0.05 
+ - Dáta neboli normalizované nakoľko pridanie hlbky a šírky sa ukázalo ako úspešne, ako bolo dohodnuté na predchádzajúcej konzultácií 
+ - Rozbehanie na najlepších parametroch 
+ - Evaluácia 
+   - Classification report 
+   - Confusion matrix 
 

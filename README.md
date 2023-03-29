@@ -63,7 +63,7 @@ Based on [exploratory data analysis](./src/EDA.ipynb) test set does not have tar
 
 ### 3. Model
 Best parameters from WandB:
- - batch size: 128,
+ - batch size: 512,
  - hidden size: 256,
  - epochs: 100,
  - learning rate: 0.03648030109469176
@@ -241,6 +241,12 @@ def train_mlp(n_epochs, mlp, optimizer, loss_fn,
 <p align="center">
 	<img src="./figures/validation_acc.png">
 </p>
+
+Loss accuracy vs validation accuracy from the exercise 6:
+<p align="center">
+	<img src="./figures/loss_acc.png">
+</p>
+
 
 #### TensorFlow
 ```python3

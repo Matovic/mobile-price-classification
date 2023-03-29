@@ -272,7 +272,7 @@ def train_mlp(n_epochs, mlp, optimizer, loss_fn,
 	<img src="./figures/validation_acc.png">
 </p>
 
-Loss accuracy vs validation accuracy from the exercise 6:
+Loss accuracy vs validation accuracy from the last run:
 <p align="center">
 	<img src="./figures/loss_acc.png">
 </p>
